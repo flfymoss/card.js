@@ -1,0 +1,20 @@
+{
+    "env": {
+        "browser": true,
+        "es2022": true,
+        "node": true
+    },
+    "ignorePatterns": ["node_modules/", "deps/", "assets/", "test/"],
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "quotes": ["error", "single", { "allowTemplateLiterals": true, "avoidEscape": true }],
+        "indent": ["error", 2, { "SwitchCase": 1 }]
+    },
+    "globals": {
+        "acorn": true,
+        "Interpreter": true
+    }
+}

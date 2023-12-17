@@ -1,0 +1,40 @@
+{
+  "name": "card.js",
+  "version": "1.0.0",
+  "description": "Make a card from your emotion.",
+  "main": "make.js",
+  "dependencies": {
+    "@babel/core": "^7.23.6",
+    "@babel/preset-env": "^7.23.6",
+    "mitt": "^3.0.1",
+    "upng-js": "^2.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "eslint": "^8.56.0",
+    "rollup": "^4.9.1",
+    "vite": "^5.0.10"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "build-js-interpreter": "cd deps/JS-Interpreter_wrapper/; npx rollup -c",
+    "prepare": "npm run build-js-interpreter",
+    "browser": "cd examples/browser; vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flfymoss/card.js.git"
+  },
+  "keywords": [
+    "card.js",
+    "card",
+    "emotion"
+  ],
+  "author": "flfymoss",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/flfymoss/card.js/issues"
+  },
+  "homepage": "https://github.com/flfymoss/card.js#readme",
+  "type": "module"
+}
