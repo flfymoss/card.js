@@ -9,7 +9,7 @@ const make = (gBuffer, sBuffer) => {
 
   // Transform source code to ES5-comliant code.
   const rawSource = (new TextDecoder()).decode(sBuffer);
-  const newSource = transformSync(rawSource, {'presets': ['@babel/preset-env']}).code;
+  const newSource = transformSync(rawSource, {presets: ['@babel/preset-env', 'minify'], comments: false}).code;
   const sArray = (new TextEncoder()).encode(newSource);
 
   const cWidth = gWidth;

@@ -44,6 +44,9 @@ const createInterpreter = (code, logger, minTickMs = 10) => {
       callbackFn = fn;
       status.set(StatusValue.WAITING_INPUT);
     }));
+    interpreter.setProperty(globalObject, 'wait', interpreter.createAsyncFunction((ms, cb) => {
+      setTimeout(cb, ms);
+    }));
   };
   const myInterpreter = new Interpreter(code, initFunc);
   const scheduleNext = () => timeout = setTimeout(loop, minTickMs);

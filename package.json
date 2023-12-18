@@ -6,6 +6,7 @@
   "dependencies": {
     "@babel/core": "^7.23.6",
     "@babel/preset-env": "^7.23.6",
+    "babel-preset-minify": "^0.5.2",
     "mitt": "^3.0.1",
     "upng-js": "^2.1.0"
   },
