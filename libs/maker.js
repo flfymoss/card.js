@@ -4,6 +4,7 @@ import { transformSync } from '@babel/core';
 
 const make = (gBuffer, sBuffer) => {
   const cardGraphic = UPNG.decode(gBuffer);
+  const gPxBytes = cardGraphic.ctype < 4 ? Constants.BYTES_24BIT : Constants.BYTES_32BIT;
   const [gWidth, gHeight, gSize] = [cardGraphic.width, cardGraphic.height, cardGraphic.width * cardGraphic.height * Constants.BYTES_32BIT];
 
   // Transform source code to ES5-comliant code.
@@ -16,8 +17,16 @@ const make = (gBuffer, sBuffer) => {
   const cSize = cWidth * cHeight * Constants.BYTES_32BIT;
   const cArray = new Uint8Array(cSize);
 
+  let padding = 0;
   for (let i = 0; i < gSize; ++i) {
-    cArray[i] = cardGraphic.data[i];
+    if (gPxBytes === Constants.BYTES_24BIT) {
+      if ((i + 1) % Constants.BYTES_32BIT === 0) {
+        ++padding;
+        cArray[i] = 0xff;
+        continue;
+      }
+    }
+    cArray[i] = cardGraphic.data[i - padding];
   }
 
   const dataView = new DataView(cArray.buffer, gSize);
