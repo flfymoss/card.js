@@ -20,7 +20,8 @@
     "lint": "eslint .",
     "build-js-interpreter": "cd deps/JS-Interpreter_wrapper/; npx rollup -c",
     "prepare": "npm run build-js-interpreter",
-    "browser": "cd examples/browser; vite"
+    "browser": "cd examples/browser; vite",
+    "build-example-html": "cd examples/browser; vite build --base=./"
   },
   "repository": {
     "type": "git",

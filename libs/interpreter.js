@@ -47,6 +47,9 @@ const createInterpreter = (code, logger, minTickMs = 10) => {
     interpreter.setProperty(globalObject, 'wait', interpreter.createAsyncFunction((ms, cb) => {
       setTimeout(cb, ms);
     }));
+    interpreter.setProperty(globalObject, 'randInt', interpreter.createNativeFunction((min, max) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }));
   };
   const myInterpreter = new Interpreter(code, initFunc);
   const scheduleNext = () => timeout = setTimeout(loop, minTickMs);

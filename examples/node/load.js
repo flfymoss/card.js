@@ -10,18 +10,20 @@ const sBuffer = load(cBuffer);
 const code = (new TextDecoder()).decode(sBuffer);
 
 const logger = (text, props) => {
-  console.log(`[LOG] ${text}`);
-  if (props) {
-    console.log(`  [PROPS] ${JSON.stringify(props)}`);
-  }
+  const print = props?.kl ? process.stdout.write.bind(process.stdout) : console.log;
+  print(text);
 };
 const interpreter = createInterpreter(code, logger, 10);
 interpreter.hook('status', async (status) => {
   if (status === interpreter.StatusValue.WAITING_INPUT) {
     const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
-    const input = await prompt.question('input: ');
+    const input = await prompt.question('INPUT > ');
     interpreter.setInput(input);
     prompt.close();
   }
+  if (status === interpreter.StatusValue.DONE) {
+    console.log('\n（再現終了）');
+  }
 });
+console.log('（再現開始）\n');
 interpreter.run();

@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self';" />
-    <title>Example</title>
+    <link rel="stylesheet" href="sample.css" />
+    <title>Card.js Example</title>
   </head>
   <body>
     <h3>Pick your card :</h3>
@@ -16,20 +17,29 @@
     <textarea id="console" cols="100" rows="10" readonly></textarea>
 
     <h3>Input :</h3>
-    <input type="text" id="input_text"></textarea>
-    <button id="input_button">Input</button>
+    <input type="text" id="input_text" autocomplete="off" disabled></textarea>
+    <button id="input_button" disabled>Input</button>
 
     <script type="module">
       import { load } from '../../libs/loader.js';
-      import { createInterpreter } from "../../libs/interpreter.js";
+      import { createInterpreter } from '../../libs/interpreter.js';
 
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener('DOMContentLoaded', () => {
         const cardPicker = document.getElementById("cardPicker");
         const consoleArea = document.getElementById("console");
         const inputText = document.getElementById("input_text");
         const inputButton = document.getElementById("input_button");
 
-        cardPicker.addEventListener("change", () => {
+        consoleArea.addEventListener('change', () => {
+          consoleArea.scrollTop = consoleArea.scrollHeight;
+        });
+
+        const print = (text, props = undefined) => {
+          consoleArea.value += `${text}${props?.kl ? '' : '\n'}`;
+          consoleArea.dispatchEvent(new Event('change'));
+        };
+
+        cardPicker.addEventListener('change', () => {
           const fileInput = event.target;
           const file = fileInput.files[0];
 
@@ -37,22 +47,34 @@
           const reader = new FileReader();
 
           reader.onload = (ev) => {
+            consoleArea.value = '';
+            inputText.disabled = true;
+            inputButton.disabled = true;
+
             const cBuffer = ev.target.result;
             const sBuffer = load(cBuffer);
             const code = (new TextDecoder()).decode(sBuffer);
-            const interpreter = createInterpreter(code, (text) => {
-              consoleArea.value += `[Log] ${text}\n`;
-            }, 10);
+            const interpreter = createInterpreter(code, print, 10);
             interpreter.hook('status', (status) => {
-              consoleArea.value += `[Event] status changed: ${status}\n`;
+              if (status === interpreter.StatusValue.WAITING_INPUT) {
+                inputText.disabled = false;
+                inputButton.disabled = false;
+              }
+              if (status === interpreter.StatusValue.DONE) {
+                print('\n（再現終了）');
+              }
             });
 
             inputButton.removeEventListener("click", inputButton.__listener);
             inputButton.addEventListener("click", inputButton.__listener = () => {
+              inputText.disabled = true;
+              inputButton.disabled = true;
               const text = inputText.value;
-              consoleArea.value += `[Input] ${text}\n`;
               interpreter.setInput(text);
+              inputText.value = '';
             });
+
+            print('（再現開始）\n');
 
             interpreter.run();
           };
